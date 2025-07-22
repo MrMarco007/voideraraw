@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voidera - Cybersecurity Hub</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Three.js for 3D Animation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <style>
+        /* Custom Styles */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0a0a1a;
+            color: #e0e0e0;
+        }
+        h1, h2, h3, .font-mono {
+            font-family: 'Roboto Mono', monospace;
+        }
+        .glass-nav {
+            background: rgba(10, 10, 26, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0, 255, 255, 0.1);
+        }
+        .hero-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+        .content-z {
+            position: relative;
+            z-index: 2;
+        }
+        .neon-text {
+            text-shadow: 0 0 5px #00ffff, 0 0 10px #00ffff, 0 0 20px #00ffff, 0 0 40px #00ffff;
+        }
+        .card-bg {
+            background-color: rgba(16, 24, 48, 0.5);
+            border: 1px solid rgba(0, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+        .card-bg:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 255, 255, 0.1);
+            border-color: rgba(0, 255, 255, 0.5);
+        }
+        .chatbot-window {
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        }
+        /* Style for Modals to ensure they're on top */
+        #login-modal, #admin-panel, #full-post-modal {
+            z-index: 100;
+        }
+    </style>
+</head>
+<body class="overflow-x-hidden">
+
+    <!-- HEADER & NAVIGATION -->
+    <header id="header" class="glass-nav fixed top-0 left-0 right-0 z-50">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <!-- Logo -->
+                <a href="#" class="text-3xl font-bold tracking-wider text-white">
+                    V<span class="text-cyan-400">O</span>IDERA
+                </a>
+
+                <!-- Desktop Navigation -->
+                <nav class="hidden lg:flex items-center space-x-8">
+                    <a href="#home" class="text-gray-300 hover:text-cyan-400 transition-colors duration-300">Home</a>
+                    <a href="#about" class="text-gray-300 hover:text-cyan-400 transition-colors duration-300">About Us</a>
+                    <a href="#trending" class="text-gray-300 hover:text-cyan-400 transition-colors duration-300">Trending</a>
+                    <a href="#contact" class="text-gray-300 hover:text-cyan-400 transition-colors duration-300">Contact</a>
+                </nav>
+
+                <!-- Search Bar -->
+                <div class="hidden md:block">
+                    <div class="relative">
+                        <input type="text" id="desktop-search-input" placeholder="Search posts..." class="bg-gray-800 border border-gray-700 rounded-full py-2 px-4 w-64 text-white focus:outline-none focus:border-cyan-400 transition-all duration-300">
+                        <svg class="w-5 h-5 text-gray-500 absolute right-4 top-1/2 -translate-y-1/2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                    </div>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <div class="lg:hidden">
+                    <button id="mobile-menu-button" class="text-white">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden lg:hidden bg-gray-900/80 backdrop-blur-sm">
+            <a href="#home" class="block py-3 px-4 text-center text-white hover:bg-cyan-500/20">Home</a>
+            <a href="#about" class="block py-3 px-4 text-center text-white hover:bg-cyan-500/20">About Us</a>
+            <a href="#trending" class="block py-3 px-4 text-center text-white hover:bg-cyan-500/20">Trending</a>
+            <a href="#contact" class="block py-3 px-4 text-center text-white hover:bg-cyan-500/20">Contact</a>
+            <div class="p-4">
+                 <input type="text" id="mobile-search-input" placeholder="Search posts..." class="bg-gray-800 border border-gray-700 rounded-full py-2 px-4 w-full text-white focus:outline-none focus:border-cyan-400">
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main>
+        <!-- HERO SECTION with 3D Animation -->
+        <section id="home" class="relative h-screen flex items-center justify-center text-center overflow-hidden">
+            <div id="hero-3d-container" class="hero-canvas"></div>
+            <div class="content-z max-w-4xl mx-auto px-4">
+                <h1 class="text-5xl md:text-7xl lg:text-8xl font-black uppercase text-white tracking-wider">
+                    Voidera Security
+                </h1>
+                <p class="mt-6 text-xl md:text-2xl text-cyan-300 neon-text font-mono">
+                    Decoding the Digital Frontier. Your Shield in Cyberspace.
+                </p>
+                <a href="#posts" class="mt-10 inline-block bg-cyan-500 text-gray-900 font-bold py-3 px-8 rounded-full text-lg hover:bg-cyan-400 transition-all duration-300 transform hover:scale-105">
+                    Explore Threats
+                </a>
+            </div>
+        </section>
+
+        <!-- TRENDING POSTS -->
+        <section id="trending" class="py-20 bg-black/20">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <h2 class="text-4xl font-bold text-center mb-12">Trending Analysis</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Post 1 -->
+                    <article class="card-bg rounded-lg overflow-hidden shadow-lg flex flex-col">
+                        <img src="https://placehold.co/600x400/0a0a1a/00ffff?text=Quantum+Threat" alt="Blog Post Image" class="w-full h-48 object-cover">
+                        <div class="p-6 flex flex-col flex-grow">
+                            <h3 class="text-xl font-bold mb-2 text-white"><a href="#">Harvest Now, Decrypt Later (HNDL)</a></h3>
+                            <div class="text-sm text-gray-500 mb-4 font-mono">By Voidera Analysis | Trending in 2025</div>
+                            <p class="text-gray-400 mb-4 flex-grow" data-fulltext="The most patient threat actors are playing a long game. 'Harvest Now, Decrypt Later' (HNDL) is a strategy where state-sponsored groups are currently exfiltrating massive amounts of encrypted data from governments and corporations. While this data is protected by current encryption standards like RSA and AES, the attackers are storing it with the expectation that emerging quantum computers will be able to break this encryption in the near future. This makes data with long-term value—such as state secrets, intellectual property, and biometric information—a primary target. Organizations must now consider a 'quantum-ready' cryptographic strategy, exploring Post-Quantum Cryptography (PQC) algorithms to protect their most sensitive data for the long haul.">Adversaries are stealing encrypted data today to break it with tomorrow's quantum computers.</p>
+                            <a href="#" class="font-mono text-cyan-400 hover:text-cyan-300 read-more-link mt-auto">Read More &rarr;</a>
+                        </div>
+                    </article>
+                    <!-- Post 2 -->
+                    <article class="card-bg rounded-lg overflow-hidden shadow-lg flex flex-col">
+                        <img src="https://placehold.co/600x400/0a0a1a/00ffff?text=OT/ICS+Ransomware" alt="Blog Post Image" class="w-full h-48 object-cover">
+                        <div class="p-6 flex flex-col flex-grow">
+                            <h3 class="text-xl font-bold mb-2 text-white"><a href="#">Critical Infrastructure & OT Ransomware</a></h3>
+                             <div class="text-sm text-gray-500 mb-4 font-mono">By Voidera Analysis | Trending in 2025</div>
+                            <p class="text-gray-400 mb-4 flex-grow" data-fulltext="Ransomware has moved beyond corporate IT networks and is now actively targeting Operational Technology (OT) and Industrial Control Systems (ICS). These are the systems that manage physical infrastructure like power grids, water treatment facilities, and manufacturing plants. Attacks on OT can have devastating real-world consequences, causing physical disruption and endangering public safety. Ransomware groups like EKANS and Clop have developed specialized malware that can interact with ICS protocols. Securing these environments is uniquely challenging due to legacy systems, the need for 24/7 uptime, and the convergence of IT and OT networks. Defense requires network segmentation, specialized OT monitoring tools, and a robust incident response plan that accounts for physical process safety.">Ransomware gangs are now targeting physical infrastructure, causing real-world disruption.</p>
+                            <a href="#" class="font-mono text-cyan-400 hover:text-cyan-300 read-more-link mt-auto">Read More &rarr;</a>
+                        </div>
+                    </article>
+                    <!-- Post 3 -->
+                    <article class="card-bg rounded-lg overflow-hidden shadow-lg flex flex-col">
+                        <img src="https://placehold.co/600x400/0a0a1a/00ffff?text=Zero-Trust+Exploits" alt="Blog Post Image" class="w-full h-48 object-cover">
+                        <div class="p-6 flex flex-col flex-grow">
+                            <h3 class="text-xl font-bold mb-2 text-white"><a href="#">Exploiting Zero-Trust Architectures</a></h3>
+                            <div class="text-sm text-gray-500 mb-4 font-mono">By Voidera Analysis | Trending in 2025</div>
+                            <p class="text-gray-400 mb-4 flex-grow" data-fulltext="As organizations rapidly adopt Zero-Trust principles ('never trust, always verify'), attackers are adapting their tactics. Instead of breaching a network perimeter, they now focus on compromising the core components of the Zero-Trust architecture itself. This includes targeting identity providers, exploiting misconfigured access policies, and forging authentication tokens. If an attacker can compromise a central identity service, they can move laterally through the network with legitimate, verified credentials, completely undermining the Zero-Trust model. This new threat landscape requires organizations to apply Zero-Trust principles to the security tools themselves, with a heavy emphasis on identity threat detection and response (ITDR), policy auditing, and securing the authentication mechanisms that form the foundation of the architecture.">Attackers are now targeting the identity and policy engines that run modern networks.</p>
+                            <a href="#" class="font-mono text-cyan-400 hover:text-cyan-300 read-more-link mt-auto">Read More &rarr;</a>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- MAIN BLOG FEED & SIDEBAR -->
+        <section id="posts" class="py-20">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="lg:flex lg:space-x-12">
+                    <!-- Blog Posts Column -->
+                    <div class="lg:w-2/3">
+                        <h2 class="text-3xl font-bold mb-8">Latest From The Void</h2>
+                        
+                        <div id="blog-posts-container">
+                            <!-- LATEST 2025 THREATS -->
+                            <article class="card-bg p-6 rounded-lg mb-8">
+                                <h3 class="text-2xl font-bold mb-2"><a href="#" class="text-white hover:text-cyan-400">Metamorph: The Rise of AI-Driven Polymorphic Malware in 2025</a></h3>
+                                <div class="text-sm text-gray-500 mb-4 font-mono">By Dr. Aris Thorne | Published on July 22, 2025</div>
+                                <p class="text-gray-400" data-fulltext="Traditional antivirus is struggling against a new breed of threat. 'Metamorph' malware uses generative AI to rewrite its own code in real-time, creating a constantly moving target that evades signature-based detection. This new generation of malware doesn't just change its file hash; it alters its logic, encryption methods, and network communication patterns with every new infection. We'll dissect how these AI models work, analyze a recent high-profile attack attributed to the Lazarus group using this technique, and discuss the shift towards behavioral analysis and AI-powered defense systems needed to combat this evolving threat. The challenge is no longer finding a needle in a haystack; it's finding a needle that constantly changes its shape and material.">Traditional antivirus is struggling against a new breed of threat. 'Metamorph' malware uses generative AI to rewrite its own code in real-time, creating a constantly moving target that evades signature-based detection...</p>
+                                <a href="#" class="mt-4 inline-block font-mono text-cyan-400 hover:text-cyan-300 read-more-link">Continue Reading &rarr;</a>
+                            </article>
+
+                            <article class="card-bg p-6 rounded-lg mb-8">
+                                <h3 class="text-2xl font-bold mb-2"><a href="#" class="text-white hover:text-cyan-400">Impersonation-for-Hire: How Deepfake-as-a-Service is Arming Scammers</a></h3>
+                                <div class="text-sm text-gray-500 mb-4 font-mono">By Kenji Tanaka | Published on July 19, 2025</div>
+                                <p class="text-gray-400" data-fulltext="The barrier to creating convincing deepfakes has collapsed. New underground platforms are now offering 'Deepfake-as-a-Service' (DaaS), allowing low-skilled criminals to launch sophisticated video and audio impersonation attacks. For a few hundred dollars, anyone can now generate a video of a CEO authorizing a fraudulent wire transfer or an audio clip of a family member in distress. This post investigates the DaaS ecosystem, demonstrates the alarming quality of these fakes, and outlines new verification protocols and awareness training that organizations must adopt immediately. We will also touch on the liveness detection technologies being developed to counter this threat in real-time communication channels.">The barrier to creating convincing deepfakes has collapsed. New underground platforms are now offering 'Deepfake-as-a-Service' (DaaS), allowing low-skilled criminals to launch sophisticated video and audio impersonation attacks...</p>
+                                <a href="#" class="mt-4 inline-block font-mono text-cyan-400 hover:text-cyan-300 read-more-link">Continue Reading &rarr;</a>
+                            </article>
+
+                            <article class="card-bg p-6 rounded-lg mb-8">
+                                <h3 class="text-2xl font-bold mb-2"><a href="#" class="text-white hover:text-cyan-400">Poisoning the Well: The Critical Threat of AI Supply Chain Attacks</a></h3>
+                                <div class="text-sm text-gray-500 mb-4 font-mono">By Fatima Al-Jamil | Published on July 16, 2025</div>
+                                <p class="text-gray-400" data-fulltext="What if you can't trust your own AI? A new attack vector is emerging that targets the very data used to train machine learning models. By 'poisoning' training data, attackers can create hidden backdoors or cause catastrophic failures in critical AI systems, from medical diagnostic tools to autonomous vehicle navigation. This deep dive explains the mechanics of data poisoning and model manipulation, highlights the vulnerability of open-source datasets, and proposes a new framework for MLOps (Machine Learning Operations) that emphasizes data integrity, model verification, and continuous monitoring to secure the AI supply chain from end to end.">What if you can't trust your own AI? A new attack vector is emerging that targets the very data used to train machine learning models. By 'poisoning' training data, attackers can create hidden backdoors or cause catastrophic failures in critical AI systems...</p>
+                                <a href="#" class="mt-4 inline-block font-mono text-cyan-400 hover:text-cyan-300 read-more-link">Continue Reading &rarr;</a>
+                            </article>
+                        </div>
+                        <div id="no-results-message" class="hidden text-center text-gray-400 py-10">
+                            <h3 class="text-2xl font-mono">No posts found.</h3>
+                            <p>Try a different search term.</p>
+                        </div>
+                    </div>
+
+                    <!-- Sidebar Column -->
+                    <aside class="lg:w-1/3 mt-12 lg:mt-0">
+                        <div id="about" class="card-bg p-6 rounded-lg mb-8">
+                            <h3 class="text-xl font-bold mb-4">About Voidera</h3>
+                            <p class="text-gray-400">Voidera is a collective of cybersecurity professionals, ethical hackers, and researchers dedicated to demystifying digital security. We provide in-depth analysis, tutorials, and news to help you stay safe in an increasingly connected world.</p>
+                        </div>
+
+                        <div id="contact" class="card-bg p-6 rounded-lg">
+                            <h3 class="text-xl font-bold mb-4">Contact Information</h3>
+                            <ul class="space-y-3 text-gray-400">
+                                <li class="flex items-center">
+                                    <svg class="w-5 h-5 mr-3 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                                    <span>contact@voidera.dev</span>
+                                </li>
+                                <li class="flex items-center">
+                                    <svg class="w-5 h-5 mr-3 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                                    <span>Digital Sector 7G, Cyberspace</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </aside>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- LOGIN MODAL -->
+    <div id="login-modal" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center p-4">
+        <div class="bg-gray-900 rounded-lg shadow-xl w-full max-w-sm border border-cyan-700">
+            <div class="p-6 border-b border-gray-800 flex justify-between items-center">
+                <h2 class="text-2xl font-bold text-white">Admin Login</h2>
+                <button id="close-login-modal" class="text-gray-400 hover:text-white text-3xl">&times;</button>
+            </div>
+            <form id="login-form" class="p-6 space-y-4">
+                <div>
+                    <label for="username" class="block text-sm font-medium text-gray-300 mb-1">Username</label>
+                    <input type="text" id="username" name="username" required class="w-full bg-gray-800 border border-gray-700 rounded-md py-2 px-3 text-white focus:outline-none focus:border-cyan-400">
+                </div>
+                <div>
+                    <label for="password" class="block text-sm font-medium text-gray-300 mb-1">Password</label>
+                    <input type="password" id="password" name="password" required class="w-full bg-gray-800 border border-gray-700 rounded-md py-2 px-3 text-white focus:outline-none focus:border-cyan-400">
+                </div>
+                <p id="login-error" class="text-red-500 text-sm hidden">Invalid credentials. Please try again.</p>
+                <div class="text-right">
+                    <button type="submit" class="bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-2 px-6 rounded-md transition-colors">Login</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ADMIN PANEL MODAL -->
+    <div id="admin-panel" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center p-4">
+        <div class="bg-gray-900 rounded-lg shadow-xl w-full max-w-2xl border border-cyan-700">
+            <div class="p-6 border-b border-gray-800 flex justify-between items-center">
+                <h2 class="text-2xl font-bold text-white">Admin Panel - Create Post</h2>
+                <button id="close-admin-panel" class="text-gray-400 hover:text-white text-3xl">&times;</button>
+            </div>
+            <form id="create-post-form" class="p-6 space-y-4">
+                <div>
+                    <label for="post-title" class="block text-sm font-medium text-gray-300 mb-1">Post Title</label>
+                    <input type="text" id="post-title" name="title" required class="w-full bg-gray-800 border border-gray-700 rounded-md py-2 px-3 text-white focus:outline-none focus:border-cyan-400">
+                </div>
+                <div>
+                    <label for="post-author" class="block text-sm font-medium text-gray-300 mb-1">Author Name</label>
+                    <input type="text" id="post-author" name="author" required class="w-full bg-gray-800 border border-gray-700 rounded-md py-2 px-3 text-white focus:outline-none focus:border-cyan-400">
+                </div>
+                <div>
+                    <label for="post-content" class="block text-sm font-medium text-gray-300 mb-1">Content</label>
+                    <textarea id="post-content" name="content" rows="8" required class="w-full bg-gray-800 border border-gray-700 rounded-md py-2 px-3 text-white focus:outline-none focus:border-cyan-400"></textarea>
+                </div>
+                <div class="text-right">
+                    <button type="submit" class="bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-2 px-6 rounded-md transition-colors">Publish Post</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- FULL POST MODAL -->
+    <div id="full-post-modal" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-gray-900 rounded-lg shadow-xl w-full max-w-3xl border border-cyan-700 my-8">
+            <div class="p-6 border-b border-gray-800 flex justify-between items-center">
+                <h2 id="modal-post-title" class="text-2xl lg:text-3xl font-bold text-white">Post Title</h2>
+                <button id="close-full-post-modal" class="text-gray-400 hover:text-white text-3xl">&times;</button>
+            </div>
+            <div class="p-6 lg:p-8">
+                <div id="modal-post-meta" class="text-sm text-gray-500 mb-6 font-mono">Author and Date</div>
+                <div id="modal-post-content" class="text-gray-300 leading-relaxed space-y-4 prose prose-invert prose-p:text-gray-300">
+                    <!-- Full post content goes here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="bg-gray-900 border-t border-cyan-900/50">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 text-center md:text-left">
+                <!-- Footer Column 1: About -->
+                <div>
+                    <h4 class="text-xl font-bold mb-4 text-white">VOIVERA</h4>
+                    <p class="text-gray-400">Your shield in the digital age. We provide insights and tools to navigate the complexities of cybersecurity.</p>
+                </div>
+                <!-- Footer Column 2: Quick Links -->
+                <div>
+                    <h4 class="text-lg font-bold mb-4 text-white">Quick Links</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#about" class="text-gray-400 hover:text-cyan-400">About Us</a></li>
+                        <li><a href="#posts" class="text-gray-400 hover:text-cyan-400">Blog</a></li>
+                        <li><a href="#" id="open-admin-panel" class="text-gray-400 hover:text-cyan-400 cursor-pointer">Admin Panel</a></li>
+                    </ul>
+                </div>
+                <!-- Footer Column 3: Follow Us -->
+                <div>
+                    <h4 class="text-lg font-bold mb-4 text-white">Follow Us</h4>
+                    <div class="flex justify-center md:justify-start space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-cyan-400"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M22.46,6C21.69,6.35 20.86,6.58 20,6.69C20.88,6.16 21.56,5.32 21.88,4.31C21.05,4.81 20.13,5.16 19.16,5.36C18.37,4.5 17.26,4 16,4C13.65,4 11.73,5.92 11.73,8.29C11.73,8.63 11.77,8.96 11.84,9.27C8.28,9.09 5.11,7.38 3,4.79C2.63,5.42 2.42,6.16 2.42,6.94C2.42,8.43 3.17,9.75 4.33,10.5C3.62,10.5 2.96,10.3 2.38,10C2.38,10 2.38,10 2.38,10.03C2.38,12.11 3.86,13.85 5.82,14.24C5.46,14.34 5.08,14.39 4.69,14.39C4.42,14.39 4.15,14.36 3.89,14.31C4.43,16 6,17.26 7.89,17.29C6.43,18.45 4.58,19.13 2.56,19.13C2.22,19.13 1.88,19.11 1.54,19.07C3.44,20.29 5.7,21 8.12,21C16,21 20.33,14.46 20.33,8.79C20.33,8.6 20.33,8.42 20.32,8.23C21.16,7.63 21.88,6.87 22.46,6Z"></path></svg></a>
+                        <a href="#" class="text-gray-400 hover:text-cyan-400"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M19,3H5C3.89,3 3,3.89 3,5V19C3,20.11 3.9,21 5,21H19C20.11,21 21,20.11 21,19V5C21,3.89 20.1,3 19,3M18.5,18.5H16.5V13.2A1.26,1.26 0 0,0 15.24,12A1.26,1.26 0 0,0 14,13.2V18.5H12V12H14V13C14.33,12.4 14.93,11.8 15.8,11.8A2.7,2.7 0 0,1 18.5,14.5V18.5M10.5,11A1.5,1.5 0 1,1 9,9.5A1.5,1.5 0 0,1 10.5,11M11,18.5H7V12H11V18.5Z"></path></svg></a>
+                    </div>
+                </div>
+                <!-- Footer Column 4: Newsletter -->
+                <div>
+                    <h4 class="text-lg font-bold mb-4 text-white">Stay Updated</h4>
+                    <p class="text-gray-400 mb-4">Get the latest threats and analysis delivered to your inbox.</p>
+                    <form>
+                        <input type="email" placeholder="your@email.com" class="w-full bg-gray-800 border border-gray-700 rounded-md py-2 px-3 text-white focus:outline-none focus:border-cyan-400">
+                        <button type="submit" class="w-full mt-2 bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-2 px-4 rounded-md">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+            <div class="mt-8 pt-8 border-t border-gray-800 text-center text-gray-500">
+                &copy; 2025 Voidera. All Rights Reserved.
+            </div>
+        </div>
+    </footer>
+
+
+    <!-- CHATBOT -->
+    <div id="chatbot-container" class="fixed bottom-5 right-5 z-50">
+        <div id="chatbot-window" class="chatbot-window w-80 h-96 bg-gray-900/80 backdrop-blur-md rounded-lg shadow-2xl flex flex-col transform scale-0 origin-bottom-right">
+            <div class="p-3 bg-gray-800 rounded-t-lg flex justify-between items-center">
+                <h3 class="text-white font-bold">Voidera Assistant</h3>
+                <button id="close-chatbot" class="text-gray-400 hover:text-white">&times;</button>
+            </div>
+            <div id="chat-log" class="flex-grow p-3 overflow-y-auto space-y-4"></div>
+            <div class="p-3 border-t border-gray-700">
+                <input id="chat-input" type="text" placeholder="Ask something..." class="w-full bg-gray-700 rounded-full py-2 px-4 text-white focus:outline-none focus:border-cyan-500">
+            </div>
+        </div>
+        <button id="chatbot-toggle" class="mt-4 w-16 h-16 bg-cyan-500 rounded-full flex items-center justify-center text-white shadow-lg transform hover:scale-110 transition-transform">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
+        </button>
+    </div>
+
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+
+        // --- 3D HERO ANIMATION ---
+        let scene, camera, renderer, particles;
+        const container = document.getElementById('hero-3d-container');
+
+        function init3D() {
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
+            camera.position.z = 30;
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            container.appendChild(renderer.domElement);
+            const particleCount = 5000;
+            const geometry = new THREE.BufferGeometry();
+            const positions = new Float32Array(particleCount * 3);
+            for (let i = 0; i < particleCount * 3; i++) {
+                positions[i] = (Math.random() - 0.5) * 100;
+            }
+            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            const material = new THREE.PointsMaterial({ color: 0x00ffff, size: 0.1, transparent: true, blending: THREE.AdditiveBlending });
+            particles = new THREE.Points(geometry, material);
+            scene.add(particles);
+            animate();
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            particles.rotation.x += 0.0001;
+            particles.rotation.y += 0.0002;
+            renderer.render(scene, camera);
+        }
+
+        function onWindowResize() {
+            if (camera) {
+                camera.aspect = container.clientWidth / container.clientHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(container.clientWidth, container.clientHeight);
+            }
+        }
+        window.addEventListener('resize', onWindowResize, false);
+        init3D();
+
+        // --- MOBILE MENU ---
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // --- SEARCH FUNCTIONALITY ---
+        const desktopSearchInput = document.getElementById('desktop-search-input');
+        const mobileSearchInput = document.getElementById('mobile-search-input');
+        const postsContainer = document.getElementById('blog-posts-container');
+        const noResultsMessage = document.getElementById('no-results-message');
+
+        const filterPosts = (searchTerm) => {
+            const term = searchTerm.toLowerCase();
+            let postsFound = false;
+            const allPosts = document.querySelectorAll('#blog-posts-container article'); // Only search main feed
+            Array.from(allPosts).forEach(post => {
+                const title = post.querySelector('h3').textContent.toLowerCase();
+                const content = post.querySelector('p').dataset.fulltext.toLowerCase();
+                if (title.includes(term) || content.includes(term)) {
+                    post.style.display = 'block';
+                    postsFound = true;
+                } else {
+                    post.style.display = 'none';
+                }
+            });
+            noResultsMessage.style.display = postsFound ? 'none' : 'block';
+        };
+
+        desktopSearchInput.addEventListener('keyup', (e) => filterPosts(e.target.value));
+        mobileSearchInput.addEventListener('keyup', (e) => filterPosts(e.target.value));
+
+        // --- ADMIN & LOGIN MODALS ---
+        const loginModal = document.getElementById('login-modal');
+        const adminPanel = document.getElementById('admin-panel');
+        const openAdminButton = document.getElementById('open-admin-panel');
+        const closeLoginModalButton = document.getElementById('close-login-modal');
+        const closeAdminButton = document.getElementById('close-admin-panel');
+        const loginForm = document.getElementById('login-form');
+        const loginError = document.getElementById('login-error');
+
+        openAdminButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            loginModal.classList.remove('hidden');
+        });
+        
+        closeLoginModalButton.addEventListener('click', () => {
+            loginModal.classList.add('hidden');
+            loginError.classList.add('hidden');
+            loginForm.reset();
+        });
+        
+        closeAdminButton.addEventListener('click', () => {
+            adminPanel.classList.add('hidden');
+        });
+
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const username = e.target.username.value;
+            const password = e.target.password.value;
+
+            if (username === 'ANOY' && password === 'Aklophax@007') {
+                loginModal.classList.add('hidden');
+                adminPanel.classList.remove('hidden');
+                loginError.classList.add('hidden');
+                loginForm.reset();
+            } else {
+                loginError.classList.remove('hidden');
+            }
+        });
+
+        // --- FULL POST MODAL ---
+        const fullPostModal = document.getElementById('full-post-modal');
+        const closeFullPostModalButton = document.getElementById('close-full-post-modal');
+        const modalTitle = document.getElementById('modal-post-title');
+        const modalMeta = document.getElementById('modal-post-meta');
+        const modalContent = document.getElementById('modal-post-content');
+
+        document.body.addEventListener('click', (e) => {
+            if (e.target.classList.contains('read-more-link')) {
+                e.preventDefault();
+                const article = e.target.closest('article');
+                const title = article.querySelector('h3 a').textContent;
+                const meta = article.querySelector('.font-mono').textContent;
+                const fullText = article.querySelector('p').dataset.fulltext;
+
+                modalTitle.textContent = title;
+                modalMeta.textContent = meta;
+                modalContent.innerHTML = fullText.replace(/\n/g, '<br><br>');
+                
+                fullPostModal.classList.remove('hidden');
+            }
+        });
+
+        closeFullPostModalButton.addEventListener('click', () => {
+            fullPostModal.classList.add('hidden');
+        });
+
+        fullPostModal.addEventListener('click', (e) => {
+            if (e.target === fullPostModal) {
+                fullPostModal.classList.add('hidden');
+            }
+        });
+
+        // --- POST CREATION ---
+        const createPostForm = document.getElementById('create-post-form');
+        createPostForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const title = e.target.title.value;
+            const author = e.target.author.value;
+            const content = e.target.content.value;
+            const newPost = createPostElement(title, author, content);
+            postsContainer.prepend(newPost);
+            e.target.reset();
+            adminPanel.classList.add('hidden');
+        });
+
+        function createPostElement(title, author, content) {
+            const article = document.createElement('article');
+            article.className = 'card-bg p-6 rounded-lg mb-8';
+            const date = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+            const previewContent = content.length > 150 ? content.substring(0, 150) + '...' : content;
+            const safeContent = content.replace(/"/g, '&quot;');
+
+            article.innerHTML = `
+                <h3 class="text-2xl font-bold mb-2"><a href="#" class="text-white hover:text-cyan-400">${title}</a></h3>
+                <div class="text-sm text-gray-500 mb-4 font-mono">By ${author} | Published on ${date}</div>
+                <p class="text-gray-400" data-fulltext="${safeContent}">${previewContent}</p>
+                <a href="#" class="mt-4 inline-block font-mono text-cyan-400 hover:text-cyan-300 read-more-link">Continue Reading &rarr;</a>
+            `;
+            return article;
+        }
+
+        // --- CHATBOT LOGIC ---
+        const chatbotToggle = document.getElementById('chatbot-toggle');
+        const chatbotWindow = document.getElementById('chatbot-window');
+        const closeChatbot = document.getElementById('close-chatbot');
+        const chatLog = document.getElementById('chat-log');
+        const chatInput = document.getElementById('chat-input');
+
+        chatbotToggle.addEventListener('click', () => {
+            chatbotWindow.classList.toggle('scale-0');
+            chatbotWindow.classList.toggle('scale-100');
+            if (chatbotWindow.classList.contains('scale-100') && chatLog.children.length === 0) {
+                addBotMessage("Hello! I'm the Voidera Assistant. How can I help you? Try asking about 'contact', 'about', or 'latest post'.");
+            }
+        });
+
+        closeChatbot.addEventListener('click', () => {
+            chatbotWindow.classList.add('scale-0');
+            chatbotWindow.classList.remove('scale-100');
+        });
+
+        function addBotMessage(message) {
+            const botMsgDiv = document.createElement('div');
+            botMsgDiv.className = 'p-2 rounded-lg bg-cyan-900/50 text-sm self-start max-w-xs';
+            botMsgDiv.textContent = message;
+            chatLog.appendChild(botMsgDiv);
+            chatLog.scrollTop = chatLog.scrollHeight;
+        }
+
+        function addUserMessage(message) {
+            const userMsgDiv = document.createElement('div');
+            userMsgDiv.className = 'p-2 rounded-lg bg-gray-700 text-sm self-end max-w-xs';
+            userMsgDiv.textContent = message;
+            chatLog.appendChild(userMsgDiv);
+            chatLog.scrollTop = chatLog.scrollHeight;
+        }
+
+        chatInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && chatInput.value.trim() !== '') {
+                const userMessage = chatInput.value.trim();
+                addUserMessage(userMessage);
+                handleBotResponse(userMessage.toLowerCase());
+                chatInput.value = '';
+            }
+        });
+
+        function handleBotResponse(message) {
+            setTimeout(() => {
+                if (message.includes('hello') || message.includes('hi')) {
+                    addBotMessage("Hi there! What can I help you with today?");
+                } else if (message.includes('contact')) {
+                    addBotMessage("You can reach us at contact@voidera.dev. The full contact info is also on this page!");
+                } else if (message.includes('about')) {
+                    addBotMessage("Voidera is a cybersecurity collective. You can find more details in the 'About Us' section on this page.");
+                } else if (message.includes('latest') || message.includes('post') || message.includes('blog')) {
+                    addBotMessage("Our latest post is 'Metamorph: The Rise of AI-Driven Polymorphic Malware in 2025'. You can find it in the main blog feed!");
+                } else {
+                    addBotMessage("I'm not sure how to answer that. I am a simple bot. Try asking about 'contact', 'about', or 'latest post'.");
+                }
+            }, 1000);
+        }
+    });
+    </script>
+</body>
+</html>
